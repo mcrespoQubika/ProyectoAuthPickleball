@@ -1,0 +1,12 @@
+node_modules/
+.env
+.prettierrc
+screenshots/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
