@@ -2,6 +2,7 @@ node_modules/
 .env
 .prettierrc
 screenshots/
+.DS_Store
 
 # Playwright
 /test-results/

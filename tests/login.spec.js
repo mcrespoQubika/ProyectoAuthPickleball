@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { fakeLoginPage } from '../src/pages/fakeLoginPage.js';
-import { loginPage } from '../src/pages/loginPage.js';
-import { chooseEnviroment } from '../src/helper/loginHelper.js';
+import { fakeLoginPage } from '../src/pages/FakeLoginPage.js';
+import { loginPage } from '../src/pages/LoginPage.js';
+import { chooseEnvironment } from '../src/helper/loginHelper.js';
 
 test.beforeEach('Go to login', async ({ page }) => {
-  const enviroment = chooseEnviroment();
-  await page.goto(enviroment);
+  const environment = chooseEnvironment();
+  await page.goto(environment);
 
   const fakeLogin = new fakeLoginPage(page);
-  await fakeLogin.clickOnLoginMe();
+  await fakeLogin.clickOnLoginMe(process.env.ENVIRONMENT);
 });
 
 test('Validate login', async ({ page }) => {
