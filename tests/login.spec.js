@@ -13,7 +13,7 @@ test.beforeEach('Go to login', async ({ page }) => {
 
 test('Validate login', async ({ page }) => {
   const login = new loginPage(page);
-  await login.makeLogin(process.env.USERNAME, process.env.PASSWORD, page);
+  await login.makeLogin(process.env.USERNAME, process.env.PASSWORD);
 
   await expect(page).toHaveTitle('Den Home');
 });
