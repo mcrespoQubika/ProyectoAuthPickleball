@@ -1,6 +1,6 @@
 'use strict';
 
-export class fakeLoginPage {
+export class FakeLoginPage {
   constructor(page) {
     this.logMeInButton = page.locator('#logMeInButton');
     this.submitButton = page.getByRole('button', { name: 'Submit' });

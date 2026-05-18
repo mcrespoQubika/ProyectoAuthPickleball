@@ -1,18 +1,18 @@
 import { test, expect } from '@playwright/test';
-import { fakeLoginPage } from '../src/pages/FakeLoginPage.js';
-import { loginPage } from '../src/pages/LoginPage.js';
+import { FakeLoginPage } from '../src/pages/FakeLoginPage.js';
+import { LoginPage } from '../src/pages/LoginPage.js';
 import { chooseEnvironment } from '../src/helper/loginHelper.js';
 
 test.beforeEach('Go to login', async ({ page }) => {
   const environment = chooseEnvironment();
   await page.goto(environment);
 
-  const fakeLogin = new fakeLoginPage(page);
+  const fakeLogin = new FakeLoginPage(page);
   await fakeLogin.clickOnLoginMe(process.env.ENVIRONMENT);
 });
 
 test('Validate login', async ({ page }) => {
-  const login = new loginPage(page);
+  const login = new LoginPage(page);
   await login.makeLogin(process.env.USERNAME, process.env.PASSWORD);
 
   await expect(page).toHaveTitle('Den Home');

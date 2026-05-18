@@ -2,7 +2,7 @@
 
 let token;
 
-export class loginPage {
+export class LoginPage {
   constructor(page) {
     this.page = page;
     this.usernameLabel = page.locator('vaadin-text-field#email input');
