@@ -20,7 +20,7 @@ jobs:
     - name: Run Playwright tests
       run: npx playwright test
       env:
-        ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        ENVIRONMENT: STAGE
         WEB_LOGIN_URL_QA: ${{ secrets.WEB_LOGIN_URL_QA }}
         WEB_LOGIN_URL_STAGE: ${{ secrets.WEB_LOGIN_URL_STAGE }}
         WEB_LOGIN_URL_TRAINING: ${{ secrets.WEB_LOGIN_URL_TRAINING }}
