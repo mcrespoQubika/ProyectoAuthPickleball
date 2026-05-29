@@ -1,7 +1,4 @@
 export const ERROR_MESSAGES = {
-  EMPTY_CREDENTIALS: 'Enter a valid Email',
-  INVALID_EMAIL: 'Enter a valid Email',
-  INVALID_CREDENTIALS: 'Email or password combination is incorrect',
-  MISSING_PASSWORD: 'Email or password combination is incorrect',
-  MISSING_USERNAME: 'Enter a valid Email',
+  INVALID_EMAIL: 'Enter a valid Email', //Same error occurs when an email address is not entered or is invalid.
+  INVALID_CREDENTIALS: 'Email or password combination is incorrect', //Same error when the email or password is incorrect.
 };

@@ -25,18 +25,16 @@ export class LoginPage {
     return await this.enterValidEmailMessage.textContent();
   }
 
-  async failLogin(username, password) {
+  async failLoginWithInvalidUsername(username, password) {
     await this.#fillAndSubmit(username, password);
-    const result = await Promise.race([
-      this.enterValidEmailMessage.waitFor({ state: 'visible' }).then(() => 'emailError'),
-      this.invalidCredentialsMessage.waitFor({ state: 'visible' }).then(() => 'credentialsError'),
-    ]);
+    await this.enterValidEmailMessage.waitFor({ state: 'visible' });
+    return await this.enterValidEmailMessage.textContent();
+  }
 
-    if (result === 'emailError') {
-      return await this.enterValidEmailMessage.textContent();
-    } else {
-      return await this.invalidCredentialsMessage.textContent();
-    }
+  async failLoginWithCredentialsErrors(username, password) {
+    await this.#fillAndSubmit(username, password);
+    await this.invalidCredentialsMessage.waitFor({ state: 'visible' });
+    return await this.invalidCredentialsMessage.textContent();
   }
 
   async loginWithUsernameOnly(username) {
