@@ -26,9 +26,9 @@ jobs:
           WEB_LOGIN_URL_TRAINING: ${{ secrets.WEB_LOGIN_URL_TRAINING }}
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
-          INVALIDUSERNAME: ${{ secrets.INVALIDUSERNAME }}
-          WRONGUSERNAME: ${{ secrets.WRONGUSERNAME }}
-          WRONGPASSWORD: ${{ secrets.WRONGPASSWORD }}
+          INVALID_USERNAME: ${{ secrets.INVALID_USERNAME }}
+          WRONG_USERNAME: ${{ secrets.WRONG_USERNAME }}
+          WRONG_PASSWORD: ${{ secrets.WRONG_PASSWORD }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

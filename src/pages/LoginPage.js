@@ -21,6 +21,7 @@ export class LoginPage {
 
   async emptyLogin() {
     await this.loginButton.click();
+    await this.enterValidEmailMessage.waitFor({ state: 'visible' });
     return await this.enterValidEmailMessage.textContent();
   }
 
@@ -36,6 +37,20 @@ export class LoginPage {
     } else {
       return await this.invalidCredentialsMessage.textContent();
     }
+  }
+
+  async loginWithUsernameOnly(username) {
+    await this.usernameLabel.fill(username);
+    await this.loginButton.click();
+    await this.invalidCredentialsMessage.waitFor({ state: 'visible' });
+    return await this.invalidCredentialsMessage.textContent();
+  }
+
+  async loginWithPasswordOnly(password) {
+    await this.passwordLabel.fill(password);
+    await this.loginButton.click();
+    await this.enterValidEmailMessage.waitFor({ state: 'visible' });
+    return await this.enterValidEmailMessage.textContent();
   }
 
   async makeLogin(username, password) {

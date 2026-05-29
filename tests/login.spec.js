@@ -12,7 +12,7 @@ test.beforeEach('Go to login', async ({ page }) => {
   await fakeLogin.clickOnLoginMe(process.env.ENVIRONMENT);
 });
 
-test.describe.serial('Test login: validate message in login page when ', () => {
+test.describe('Test login: validate message in login page when ', () => {
   test('Test1: inputs empty', async ({ page, request }) => {
     const login = new LoginPage(page);
     const errorMessage = await login.emptyLogin();
@@ -21,23 +21,35 @@ test.describe.serial('Test login: validate message in login page when ', () => {
 
   test('Test2: invalid email', async ({ page, request }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.failLogin(process.env.INVALIDUSERNAME, process.env.PASSWORD);
+    const errorMessage = await login.failLogin(process.env.INVALID_USERNAME, process.env.PASSWORD);
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_EMAIL);
   });
 
   test('Test3: wrong email', async ({ page, request }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.failLogin(process.env.WRONGUSERNAME, process.env.PASSWORD);
+    const errorMessage = await login.failLogin(process.env.WRONG_USERNAME, process.env.PASSWORD);
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
 
   test('Test4: wrong password', async ({ page, request }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.failLogin(process.env.USERNAME, process.env.WRONGPASSWORD);
+    const errorMessage = await login.failLogin(process.env.USERNAME, process.env.WRONG_PASSWORD);
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
 
-  test('Test5: Validate login', async ({ page }) => {
+  test('Test5: username without password', async ({ page }) => {
+    const login = new LoginPage(page);
+    const errorMessage = await login.loginWithUsernameOnly(process.env.USERNAME);
+    expect(errorMessage).toBe(ERROR_MESSAGES.MISSING_PASSWORD);
+  });
+
+  test('Test6: password without username', async ({ page }) => {
+    const login = new LoginPage(page);
+    const errorMessage = await login.loginWithPasswordOnly(process.env.PASSWORD);
+    expect(errorMessage).toBe(ERROR_MESSAGES.MISSING_USERNAME);
+  });
+
+  test('Test7: Validate login', async ({ page }) => {
     const login = new LoginPage(page);
     await login.makeLogin(process.env.USERNAME, process.env.PASSWORD);
 
