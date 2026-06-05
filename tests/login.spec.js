@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { FakeLoginPage } from '../src/pages/FakeLoginPage.js';
-import { LoginPage } from '../src/pages/LoginPage.js';
+import { LoginPage, ERROR_TYPE } from '../src/pages/LoginPage.js';
 import { chooseEnvironment } from '../src/helper/loginHelper.js';
 import { ERROR_MESSAGES } from '../src/data/errorMessages.js';
 
@@ -12,42 +12,39 @@ test.beforeEach('Go to login', async ({ page }) => {
   await fakeLogin.clickOnLoginMe(process.env.ENVIRONMENT);
 });
 
-test.describe('Test cases to validate error messages when logging in with invalid data and successful login', () => {
-  test('Validate error message when: login without username and password', async ({
-    page,
-    request,
-  }) => {
+test.describe('Login: error scenarios', () => {
+  test('Validate error message when: login without username and password', async ({ page }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.emptyLogin();
+    const errorMessage = await login.submitEmptyLogin();
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_EMAIL);
   });
 
-  test('Validate error message when: login with invalid format email', async ({
-    page,
-    request,
-  }) => {
+  test('Validate error message when: login with invalid format email', async ({ page }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.failLoginWithInvalidUsername(
+    const errorMessage = await login.submitLogin(
       process.env.INVALID_USERNAME,
       process.env.PASSWORD,
+      ERROR_TYPE.EMAIL,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_EMAIL);
   });
 
-  test('Validate error message when: login with wrong email', async ({ page, request }) => {
+  test('Validate error message when: login with wrong email', async ({ page }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.failLoginWithCredentialsErrors(
+    const errorMessage = await login.submitLogin(
       process.env.WRONG_USERNAME,
       process.env.PASSWORD,
+      ERROR_TYPE.CREDENTIALS,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
 
-  test('Validate error message when: login with wrong password', async ({ page, request }) => {
+  test('Validate error message when: login with wrong password', async ({ page }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.failLoginWithCredentialsErrors(
+    const errorMessage = await login.submitLogin(
       process.env.USERNAME,
       process.env.WRONG_PASSWORD,
+      ERROR_TYPE.CREDENTIALS,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
@@ -56,7 +53,7 @@ test.describe('Test cases to validate error messages when logging in with invali
     page,
   }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.loginWithUsernameOnly(process.env.USERNAME);
+    const errorMessage = await login.submitLoginWithoutPassword(process.env.USERNAME);
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
 
@@ -64,13 +61,15 @@ test.describe('Test cases to validate error messages when logging in with invali
     page,
   }) => {
     const login = new LoginPage(page);
-    const errorMessage = await login.loginWithPasswordOnly(process.env.PASSWORD);
+    const errorMessage = await login.submitLoginWithoutUsername(process.env.PASSWORD);
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_EMAIL);
   });
+});
 
+test.describe('Login: successful authentication', () => {
   test('Validate successful login with valid username and password', async ({ page }) => {
     const login = new LoginPage(page);
-    await login.makeLogin(process.env.USERNAME, process.env.PASSWORD);
+    await login.login(process.env.USERNAME, process.env.PASSWORD);
 
     await expect(page).toHaveTitle('Den Home');
   });

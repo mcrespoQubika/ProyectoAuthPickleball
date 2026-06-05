@@ -10,17 +10,63 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          # La key cambia si actualizás la versión de Playwright en package-lock.json
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      # -------------------------------------------------------
+      # OPCIÓN A: Solo Chromium (activa por defecto - más rápido)
+      # -------------------------------------------------------
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install system deps (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # -------------------------------------------------------
+      # OPCIÓN B: Chromium + Firefox
+      # Comentar OPCIÓN A y descomentar esta sección para usarla
+      # -------------------------------------------------------
+      # - name: Install Playwright Browsers
+      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
+      #   run: npx playwright install --with-deps chromium firefox
+      #
+      # - name: Install system deps (cache hit)
+      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+      #   run: npx playwright install-deps chromium firefox
+
+      # -------------------------------------------------------
+      # OPCIÓN C: Todos los navegadores (Chromium + Firefox + WebKit)
+      # Comentar OPCIÓN A y descomentar esta sección para usarla
+      # -------------------------------------------------------
+      # - name: Install Playwright Browsers
+      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
+      #   run: npx playwright install --with-deps
+      #
+      # - name: Install system deps (cache hit)
+      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+      #   run: npx playwright install-deps
+
       - name: Run Playwright tests
         run: npx playwright test
         env:
-          ENVIRONMENT: STAGE
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
           WEB_LOGIN_URL_QA: ${{ secrets.WEB_LOGIN_URL_QA }}
           WEB_LOGIN_URL_STAGE: ${{ secrets.WEB_LOGIN_URL_STAGE }}
           WEB_LOGIN_URL_TRAINING: ${{ secrets.WEB_LOGIN_URL_TRAINING }}
@@ -29,6 +75,7 @@ jobs:
           INVALID_USERNAME: ${{ secrets.INVALID_USERNAME }}
           WRONG_USERNAME: ${{ secrets.WRONG_USERNAME }}
           WRONG_PASSWORD: ${{ secrets.WRONG_PASSWORD }}
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
