@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { FakeLoginPage } from '../src/pages/FakeLoginPage.js';
-import { LoginPage, ERROR_TYPE } from '../src/pages/LoginPage.js';
+import { LoginPage } from '../src/pages/LoginPage.js';
 import { chooseEnvironment } from '../src/helper/loginHelper.js';
 import { ERROR_MESSAGES } from '../src/data/errorMessages.js';
 
@@ -24,7 +24,7 @@ test.describe('Login: error scenarios', () => {
     const errorMessage = await login.submitLogin(
       process.env.INVALID_USERNAME,
       process.env.PASSWORD,
-      ERROR_TYPE.EMAIL,
+      ERROR_MESSAGES.EMAIL,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_EMAIL);
   });
@@ -34,7 +34,7 @@ test.describe('Login: error scenarios', () => {
     const errorMessage = await login.submitLogin(
       process.env.WRONG_USERNAME,
       process.env.PASSWORD,
-      ERROR_TYPE.CREDENTIALS,
+      ERROR_MESSAGES.CREDENTIALS,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
@@ -44,7 +44,7 @@ test.describe('Login: error scenarios', () => {
     const errorMessage = await login.submitLogin(
       process.env.USERNAME,
       process.env.WRONG_PASSWORD,
-      ERROR_TYPE.CREDENTIALS,
+      ERROR_MESSAGES.CREDENTIALS,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
@@ -79,7 +79,7 @@ test.afterEach(async ({ page }, testInfo) => {
   console.log(`Finished test ${testInfo.title} with status ${testInfo.status}`);
   if (testInfo.status !== testInfo.expectedStatus) {
     await page.screenshot({
-      path: `screenshots/${testInfo.title}.png`,
+      path: testInfo.outputPath('screenshot.png'),
       fullPage: true,
     });
   }

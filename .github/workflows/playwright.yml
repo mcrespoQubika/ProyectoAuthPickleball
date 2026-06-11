@@ -23,14 +23,11 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          # La key cambia si actualizás la versión de Playwright en package-lock.json
+          #The law changes if you update the Playwright version in package-lock.json
           key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             playwright-${{ runner.os }}-
 
-      # -------------------------------------------------------
-      # OPCIÓN A: Solo Chromium (activa por defecto - más rápido)
-      # -------------------------------------------------------
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
@@ -39,34 +36,10 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
-      # -------------------------------------------------------
-      # OPCIÓN B: Chromium + Firefox
-      # Comentar OPCIÓN A y descomentar esta sección para usarla
-      # -------------------------------------------------------
-      # - name: Install Playwright Browsers
-      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
-      #   run: npx playwright install --with-deps chromium firefox
-      #
-      # - name: Install system deps (cache hit)
-      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-      #   run: npx playwright install-deps chromium firefox
-
-      # -------------------------------------------------------
-      # OPCIÓN C: Todos los navegadores (Chromium + Firefox + WebKit)
-      # Comentar OPCIÓN A y descomentar esta sección para usarla
-      # -------------------------------------------------------
-      # - name: Install Playwright Browsers
-      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
-      #   run: npx playwright install --with-deps
-      #
-      # - name: Install system deps (cache hit)
-      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-      #   run: npx playwright install-deps
-
       - name: Run Playwright tests
         run: npx playwright test
         env:
-          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+          ENVIRONMENT: STAGE
           WEB_LOGIN_URL_QA: ${{ secrets.WEB_LOGIN_URL_QA }}
           WEB_LOGIN_URL_STAGE: ${{ secrets.WEB_LOGIN_URL_STAGE }}
           WEB_LOGIN_URL_TRAINING: ${{ secrets.WEB_LOGIN_URL_TRAINING }}

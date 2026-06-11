@@ -1,9 +1,6 @@
 'use strict';
 
-export const ERROR_TYPE = {
-  EMAIL: 'email',
-  CREDENTIALS: 'credentials',
-};
+import { ERROR_MESSAGES } from '../data/errorMessages.js';
 
 let token;
 
@@ -34,12 +31,16 @@ export class LoginPage {
 
   async submitLogin(username, password, errorType) {
     await this.#fillAndSubmit(username, password);
-    if (errorType === ERROR_TYPE.EMAIL) {
+    if (errorType === ERROR_MESSAGES.EMAIL) {
       await this.enterValidEmailMessage.waitFor({ state: 'visible' });
       return await this.enterValidEmailMessage.textContent();
-    } else {
+    } else if (errorType === ERROR_MESSAGES.CREDENTIALS) {
       await this.invalidCredentialsMessage.waitFor({ state: 'visible' });
       return await this.invalidCredentialsMessage.textContent();
+    } else {
+      throw new Error(
+        `Unknown errorType: "${errorType}". Expected ERROR_MESSAGES.EMAIL or ERROR_MESSAGES.CREDENTIALS`,
+      );
     }
   }
 
