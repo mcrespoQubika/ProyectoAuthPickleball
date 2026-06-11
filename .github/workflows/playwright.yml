@@ -23,14 +23,20 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          #The law changes if you update the Playwright version in package-lock.json
           key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             playwright-${{ runner.os }}-
 
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_wait_seconds: 30
+          command: npx playwright install --with-deps chromium
+        env:
+          PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT: 60000
 
       - name: Install system deps (cache hit)
         if: steps.playwright-cache.outputs.cache-hit == 'true'

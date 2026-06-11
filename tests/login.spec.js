@@ -3,6 +3,7 @@ import { FakeLoginPage } from '../src/pages/FakeLoginPage.js';
 import { LoginPage } from '../src/pages/LoginPage.js';
 import { chooseEnvironment } from '../src/helper/loginHelper.js';
 import { ERROR_MESSAGES } from '../src/data/errorMessages.js';
+import { ERROR_TYPE } from '../src/data/errorType.js';
 
 test.beforeEach('Go to login', async ({ page }) => {
   const environment = chooseEnvironment();
@@ -24,7 +25,7 @@ test.describe('Login: error scenarios', () => {
     const errorMessage = await login.submitLogin(
       process.env.INVALID_USERNAME,
       process.env.PASSWORD,
-      ERROR_MESSAGES.EMAIL,
+      ERROR_TYPE.EMAIL,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_EMAIL);
   });
@@ -34,7 +35,7 @@ test.describe('Login: error scenarios', () => {
     const errorMessage = await login.submitLogin(
       process.env.WRONG_USERNAME,
       process.env.PASSWORD,
-      ERROR_MESSAGES.CREDENTIALS,
+      ERROR_TYPE.CREDENTIALS,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
@@ -44,7 +45,7 @@ test.describe('Login: error scenarios', () => {
     const errorMessage = await login.submitLogin(
       process.env.USERNAME,
       process.env.WRONG_PASSWORD,
-      ERROR_MESSAGES.CREDENTIALS,
+      ERROR_TYPE.CREDENTIALS,
     );
     expect(errorMessage).toBe(ERROR_MESSAGES.INVALID_CREDENTIALS);
   });
