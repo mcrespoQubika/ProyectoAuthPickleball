@@ -31,12 +31,14 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v3
         with:
-          timeout_minutes: 15
+          timeout_minutes: 30
           max_attempts: 3
-          retry_wait_seconds: 30
-          command: npx playwright install --with-deps chromium
+          retry_wait_seconds: 10
+          command: |
+            rm -rf ~/.cache/ms-playwright
+            npx playwright install --with-deps chromium
         env:
-          PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT: 60000
+          PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT: 120000
 
       - name: Install system deps (cache hit)
         if: steps.playwright-cache.outputs.cache-hit == 'true'
