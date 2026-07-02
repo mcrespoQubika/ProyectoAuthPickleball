@@ -43,6 +43,7 @@ jobs:
           INVALID_USERNAME: ${{ secrets.INVALID_USERNAME }}
           WRONG_USERNAME: ${{ secrets.WRONG_USERNAME }}
           WRONG_PASSWORD: ${{ secrets.WRONG_PASSWORD }}
+          CHANGE_PASSWORD_OK: ${{secrets.CHANGE_PASSWORD_OK}}
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
