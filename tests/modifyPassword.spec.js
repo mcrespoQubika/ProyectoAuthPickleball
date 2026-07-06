@@ -62,6 +62,7 @@ test.describe('Successful change password', () => {
     await expect(passwordChangedNotification).toBeVisible();
 
     await accountOptions.logOutViaAccount();
+    await expect(page).toHaveTitle('Logout');
     await loginAndGoToHome(page, process.env.USERNAME, process.env.CHANGE_PASSWORD_OK);
 
     await expect(page).toHaveTitle('Den Home');
