@@ -59,7 +59,7 @@ export class AccountPage {
     return await this.newPasswordError.textContent();
   }
 
-  async submitDifferentsPasswords(currentPassword, newPassword, repeatPassword) {
+  async submitDifferentPasswords(currentPassword, newPassword, repeatPassword) {
     await this.currentPasswordInput.fill(currentPassword);
     await this.newPasswordInput.fill(newPassword);
     await this.repeatPasswordInput.fill(repeatPassword);
@@ -77,8 +77,7 @@ export class AccountPage {
     await this.newPasswordInput.fill(newPassword);
     await this.repeatPasswordInput.fill(newPassword);
     await this.resetButton.click();
-    await this.passwordChangedNotification.waitFor({ state: 'visible' });
-    return await this.passwordChangedNotification.textContent();
+    return this.passwordChangedNotification;
   }
 
   async logOutViaAccount() {
