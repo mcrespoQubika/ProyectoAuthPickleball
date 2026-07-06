@@ -85,6 +85,5 @@ export class AccountPage {
     await this.moreOptionsButton.click();
     await this.logOutOption.waitFor({ state: 'visible' });
     await this.logOutOption.click();
-    await this.page.waitForLoadState('load');
   }
 }

@@ -13,7 +13,7 @@ export function chooseEnvironment() {
 
 export async function loginAndGoToHome(page, username, password) {
   const environment = chooseEnvironment();
-  await page.goto(environment);
+  await page.goto(environment, { waitUntil: 'commit' });
 
   const fakeLogin = new FakeLoginPage(page);
   await fakeLogin.clickOnLoginMe(process.env.ENVIRONMENT);

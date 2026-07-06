@@ -52,8 +52,6 @@ test.describe('Change password: error scenarios', () => {
 });
 
 test.describe('Successful change password', () => {
-  //let passwordChanged = false;
-
   test('Successful change password', async ({ page }) => {
     const accountOptions = new AccountPage(page);
     const passwordChangedNotification = await accountOptions.changePassword(
