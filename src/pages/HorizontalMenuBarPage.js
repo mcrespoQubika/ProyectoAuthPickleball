@@ -9,6 +9,5 @@ export class HorizontalMenuBarPage {
 
   async goToAccount() {
     await this.accountTab.click();
-    await this.accountTab.waitFor({ timeout: 5000 });
   }
 }

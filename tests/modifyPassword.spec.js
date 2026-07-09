@@ -52,6 +52,12 @@ test.describe('Change password: error scenarios', () => {
 });
 
 test.describe('Successful change password', () => {
+  let passwordWasChanged = false;
+
+  test.beforeEach(() => {
+    passwordWasChanged = false;
+  });
+
   test('Successful change password', async ({ page }) => {
     const accountOptions = new AccountPage(page);
     const passwordChangedNotification = await accountOptions.changePassword(
@@ -60,6 +66,7 @@ test.describe('Successful change password', () => {
     );
 
     await expect(passwordChangedNotification).toBeVisible();
+    passwordWasChanged = true;
 
     await accountOptions.logOutViaAccount();
     await expect(page).toHaveTitle('Logout');
@@ -68,17 +75,22 @@ test.describe('Successful change password', () => {
     await expect(page).toHaveTitle('Den Home');
   });
 
-  // test.afterEach('Revert password change', async ({ page }) => {
-  //   if (!passwordChanged) return;
-  //   passwordChanged = false;
+  test.afterEach('Restore original password after a successful change', async ({ page }) => {
+    if (!passwordWasChanged) return;
 
-  //   await loginAndGoToHome(page, process.env.USERNAME, process.env.CHANGE_PASSWORD_OK);
-  //   const horizontalMenu = new HorizontalMenuBarPage(page);
-  //   await horizontalMenu.goToAccount();
-  //   const accountOptions = new AccountPage(page);
-  //   await accountOptions.goToChangePassword();
-  //   await accountOptions.changePassword(process.env.CHANGE_PASSWORD_OK, process.env.PASSWORD);
-  // });
+    const horizontalMenu = new HorizontalMenuBarPage(page);
+    await horizontalMenu.goToAccount();
+    await expect(page).toHaveTitle('My Account');
+
+    const accountOptions = new AccountPage(page);
+    await accountOptions.goToChangePassword();
+    const passwordRestoredNotification = await accountOptions.changePassword(
+      process.env.CHANGE_PASSWORD_OK,
+      process.env.PASSWORD,
+    );
+
+    await expect(passwordRestoredNotification).toBeVisible();
+  });
 });
 
 test.afterEach(async ({ page }, testInfo) => {
