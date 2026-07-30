@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { HorizontalMenuBarPage } from '../src/pages/HorizontalMenuBarPage.js';
-import { loginAndGoToHome } from '../src/helper/loginHelper.js';
+import { loginAndGoToHome, ensureLoggedIn } from '../src/helper/loginHelper.js';
 import { AccountPage } from '../src/pages/AccountPage.js';
 import { ERROR_MESSAGES } from '../src/data/errorMessages.js';
 
@@ -54,10 +54,6 @@ test.describe('Change password: error scenarios', () => {
 test.describe('Successful change password', () => {
   let passwordWasChanged = false;
 
-  test.beforeEach(() => {
-    passwordWasChanged = false;
-  });
-
   test('Successful change password', async ({ page }) => {
     const accountOptions = new AccountPage(page);
     const passwordChangedNotification = await accountOptions.changePassword(
@@ -78,18 +74,25 @@ test.describe('Successful change password', () => {
   test.afterEach('Restore original password after a successful change', async ({ page }) => {
     if (!passwordWasChanged) return;
 
-    const horizontalMenu = new HorizontalMenuBarPage(page);
-    await horizontalMenu.goToAccount();
-    await expect(page).toHaveTitle('My Account');
+    try {
+      await ensureLoggedIn(page, process.env.USERNAME, process.env.CHANGE_PASSWORD_OK);
 
-    const accountOptions = new AccountPage(page);
-    await accountOptions.goToChangePassword();
-    const passwordRestoredNotification = await accountOptions.changePassword(
-      process.env.CHANGE_PASSWORD_OK,
-      process.env.PASSWORD,
-    );
+      const horizontalMenu = new HorizontalMenuBarPage(page);
+      await horizontalMenu.goToAccount();
+      await expect(page).toHaveTitle('My Account');
 
-    await expect(passwordRestoredNotification).toBeVisible();
+      const accountOptions = new AccountPage(page);
+      await accountOptions.goToChangePassword();
+      const passwordRestoredNotification = await accountOptions.changePassword(
+        process.env.CHANGE_PASSWORD_OK,
+        process.env.PASSWORD,
+      );
+
+      await expect(passwordRestoredNotification).toBeVisible();
+    } catch (error) {
+      console.error(`PASSWORD RESTORE FAILED. Cause: ${error.message}`);
+      throw error;
+    }
   });
 });
 

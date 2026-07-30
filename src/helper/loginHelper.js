@@ -1,5 +1,6 @@
 'use strict';
 
+import { expect } from '@playwright/test';
 import { FakeLoginPage } from '../pages/FakeLoginPage.js';
 import { LoginPage } from '../pages/LoginPage.js';
 
@@ -20,4 +21,12 @@ export async function loginAndGoToHome(page, username, password) {
 
   const login = new LoginPage(page);
   await login.login(username, password);
+}
+
+export async function ensureLoggedIn(page, username, password) {
+  const isLoggedIn = await page.locator('.nav-bar-hl').isVisible();
+  if (isLoggedIn) return;
+
+  await loginAndGoToHome(page, username, password);
+  await expect(page).toHaveTitle('Den Home');
 }
