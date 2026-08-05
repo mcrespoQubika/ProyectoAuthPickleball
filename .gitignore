@@ -4,6 +4,9 @@ node_modules/
 screenshots/
 .DS_Store
 
+# Skills personales (no compartidas con el equipo)
+.claude
+
 # Playwright
 /test-results/
 /playwright-report/
