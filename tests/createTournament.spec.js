@@ -1,7 +1,7 @@
-import { test, expect } from '../fixtures.js';
+import { test, expect } from '../src/fixtures.js';
 import { loginAndGoToHome } from '../src/helper/loginHelper.js';
 import { HomePage } from '../src/pages/HomePage.js';
-import { CreteEvent } from '../src/pages/CreateEventPage.js';
+import { CreteEventPage } from '../src/pages/CreateEventPage.js';
 import { TournamentManagerViewPage } from '../src/pages/TournamentManagerViewPage.js';
 import { TournamentPoolReportPage } from '../src/pages/TournamentPoolReportPage.js';
 import { BracketEditCardPage } from '../src/pages/BracketEditCardPage.js';
@@ -19,7 +19,7 @@ test.describe.serial('Create tournament', () => {
     await expect(sharedPage).toHaveTitle('Den Home');
 
     homePage = new HomePage(sharedPage);
-    creteEvent = new CreteEvent(sharedPage);
+    creteEvent = new CreteEventPage(sharedPage);
     tournamentCreation = new TournamentManagerViewPage(sharedPage);
     bracket = new TournamentPoolReportPage(sharedPage);
     addBracket = new BracketEditCardPage(sharedPage);
@@ -46,15 +46,22 @@ test.describe.serial('Create tournament', () => {
 
   for (const [index, bracketConfig] of BRACKET_CONFIGS.entries()) {
     test(`Add bracket ${index + 1} (${bracketConfig.teamType} - ${bracketConfig.bracketFormat})`, async () => {
+      const bracketComment = `bracket${index + 1}`;
+      const bracketCountBefore = await bracket.bracketRows.count();
+
       await bracket.clickAddBracket();
       await addBracket.creteNewBracket(
         tournamentCreation.eventStartDate,
         tournamentCreation.eventEndDate,
         bracketConfig,
+        bracketComment,
       );
       await addBracket.saveBracket();
+      await expect(addBracket.bracketSavedNotification).toBeVisible();
       await addBracket.goBackToPoolReport();
       await bracket.addBracketButton.waitFor({ state: 'visible' });
+
+      await expect(bracket.bracketRows).toHaveCount(bracketCountBefore + 1);
     });
   }
 
@@ -70,7 +77,6 @@ test.describe.serial('Create tournament', () => {
 });
 
 test.afterEach(async ({ sharedPage }, testInfo) => {
-  console.log(`Finished test ${testInfo.title} with status ${testInfo.status}`);
   if (testInfo.status !== testInfo.expectedStatus) {
     await sharedPage.screenshot({
       path: testInfo.outputPath('screenshot.png'),

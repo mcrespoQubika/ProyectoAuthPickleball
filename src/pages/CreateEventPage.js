@@ -1,7 +1,7 @@
 'use-strict';
 import { expect } from '@playwright/test';
 
-export class CreteEvent {
+export class CreteEventPage {
   constructor(page) {
     this.page = page;
     this.createTournamentButton = page.locator('vaadin-button', {

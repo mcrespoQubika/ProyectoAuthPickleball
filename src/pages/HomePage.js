@@ -1,5 +1,3 @@
-'use-strict';
-
 export class HomePage {
   constructor(page) {
     const mainView = page.locator('.main-view');

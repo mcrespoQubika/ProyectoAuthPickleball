@@ -1,6 +1,7 @@
 'use-strict';
 
 import {
+  addDays,
   addMonths,
   addWeeks,
   formatDateDayMonthName,
@@ -126,7 +127,6 @@ export class TournamentManagerViewPage {
     await this.tournamentFeeInput.fill('5');
     await this.enterTournamentDateTimes();
     await this.setTournamentConfiguration();
-    await this.saveButton.waitFor({ state: 'visible' });
     await this.saveButton.click();
   }
 
@@ -156,7 +156,7 @@ export class TournamentManagerViewPage {
     this.eventStartDate = addMonths(today, 1);
     this.eventEndDate = addWeeks(this.eventStartDate, 2);
     const registrationOpens = addWeeks(today, 1);
-    const registrationCloses = addWeeks(registrationOpens, 3);
+    const registrationCloses = addDays(this.eventStartDate, -1);
 
     await this.setDate(this.eventStartDateInput, formatDateMMDDYYYY(this.eventStartDate));
     await this.setDate(this.eventEndDateInput, formatDateMMDDYYYY(this.eventEndDate));

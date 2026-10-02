@@ -77,18 +77,23 @@ export class BracketEditCardPage {
       hasText: 'Enable Registration',
     });
 
-    this.allowAnyScoreCheckbox = page.locator('den-checkbox-helper').locator('input#checkbox');
+    this.allowAnyScoreCheckbox = page.locator('vaadin-checkbox', { hasText: 'Allow Any Score' });
 
     this.saveInfoText = page.locator('span.pd-border-card');
     this.saveButton = page.locator('vaadin-button', { hasText: 'Save' });
     this.createNextBracketButton = page.locator('vaadin-button', {
       hasText: 'Create Next Bracket',
     });
+
+    this.bracketSavedNotification = page.locator(
+      'vaadin-notification-card span:has-text("Bracket Saved")',
+    );
   }
 
-  async creteNewBracket(tournamentStartDate, tournamentEndDate, bracketConfig) {
+  async creteNewBracket(tournamentStartDate, tournamentEndDate, bracketConfig, comment) {
     await this.setTeamType(bracketConfig.teamType);
-    await this.setBracketFormat(bracketConfig.bracketFormat);
+    await this.setBracketFormat(bracketConfig.bracketFormat, bracketConfig.bracketFormatDetail);
+    await this.setPlayOffType(bracketConfig.bracketFormat, bracketConfig.playOffType);
     await this.setRandomScheduledStartDate(tournamentStartDate, tournamentEndDate);
     await this.setRandomScheduledStartTime();
 
@@ -97,6 +102,7 @@ export class BracketEditCardPage {
     await this.setLowAge(bracketConfig.lowAge);
     await this.setHighAge(bracketConfig.highAge);
     await this.setAlternateDescription(bracketConfig.alternateDescription);
+    await this.setComments(comment);
     await this.setMaximumFullTeams(bracketConfig.maximumFullTeams);
     await this.setAllowAnyScore(bracketConfig.allowAnyScore);
   }
@@ -128,17 +134,22 @@ export class BracketEditCardPage {
     await selectExactOption(this.page, this.teamTypeSelect, VAADIN_SELECT_OPTIONS, teamType);
   }
 
-  async setBracketFormat(bracketFormat) {
+  async setBracketFormat(bracketFormat, bracketFormatDetail) {
     await selectOptionByPrefix(
       this.page,
       this.bracketFormatSelect,
       VAADIN_SELECT_OPTIONS,
       bracketFormat,
+      bracketFormatDetail,
     );
+  }
 
-    if (bracketFormat === 'Round Robin' || bracketFormat === 'Double Round Robin') {
-      await selectRandomOption(this.page, this.playOffTypeSelect, VAADIN_SELECT_OPTIONS);
-    }
+  async setPlayOffType(bracketFormat, playOffType) {
+    const requiresPlayOffType =
+      bracketFormat === 'Round Robin' || bracketFormat === 'Double Round Robin';
+    if (!requiresPlayOffType || playOffType == null) return;
+
+    await selectOptionByPrefix(this.page, this.playOffTypeSelect, VAADIN_SELECT_OPTIONS, playOffType);
   }
 
   async setLowSkillLevel(lowSkillLevel) {
@@ -174,6 +185,11 @@ export class BracketEditCardPage {
   async setAlternateDescription(alternateDescription) {
     if (alternateDescription == null) return;
     await this.alternateDescriptionInput.fill(alternateDescription);
+  }
+
+  async setComments(comments) {
+    if (comments == null) return;
+    await this.commentsInput.fill(comments);
   }
 
   async setMaximumFullTeams(maximumFullTeams) {
