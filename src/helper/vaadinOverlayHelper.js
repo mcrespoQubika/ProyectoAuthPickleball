@@ -49,6 +49,12 @@ export async function selectOptionByPrefix(
   await option.click();
 }
 
+export async function setDate(dateFieldLocator, dateText) {
+  await dateFieldLocator.click();
+  await dateFieldLocator.fill(dateText);
+  await dateFieldLocator.press('Enter');
+}
+
 export async function selectRandomOption(page, triggerLocator, optionsSelector) {
   const options = await openOverlayOptions(page, triggerLocator, optionsSelector);
 

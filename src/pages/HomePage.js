@@ -24,4 +24,8 @@ export class HomePage {
   async goToHome() {
     await this.homeTab.click();
   }
+
+  tournamentCard(tournamentName) {
+    return this.page.getByRole('heading', { level: 2, name: tournamentName });
+  }
 }

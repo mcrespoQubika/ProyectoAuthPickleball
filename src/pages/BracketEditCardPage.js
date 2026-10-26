@@ -7,38 +7,20 @@ import {
   selectExactOption,
   selectOptionByPrefix,
   selectRandomOption,
+  setDate,
 } from '../helper/vaadinOverlayHelper.js';
 
 export class BracketEditCardPage {
   constructor(page) {
     this.page = page;
 
-    this.bracketTitleHeading = page.locator('den-back-arrow h2');
     this.backArrowButton = page.locator('den-back-arrow img');
 
     this.teamTypeSelect = page.locator('vaadin-select', { hasText: 'Team Type' });
     this.bracketFormatSelect = page.locator('vaadin-select', { hasText: 'Bracket Format' });
-    this.matchTypeSelect = page.locator('vaadin-select', { hasText: 'Match Type' });
 
     this.playOffTypeSelect = page.locator('vaadin-select', { hasText: 'PlayOff Type' });
 
-    this.eliminationMatchTypeSelects = page.locator('vaadin-select', {
-      hasText: 'Elimination Match Type',
-    });
-    this.eliminationMatchTypeSelect = this.eliminationMatchTypeSelects.nth(0);
-    this.secondEliminationMatchTypeSelect = this.eliminationMatchTypeSelects.nth(1);
-
-    this.scoringTypeRadioGroup = page.locator('vaadin-radio-group', { hasText: 'Scoring Type' });
-    this.scoringTypeSideOutRadio = this.scoringTypeRadioGroup.locator('vaadin-radio-button', {
-      hasText: 'Side-out',
-    });
-    this.scoringTypeRallyRadio = this.scoringTypeRadioGroup.locator('vaadin-radio-button', {
-      hasText: 'Rally',
-    });
-
-    this.bracketFeePerPlayerInput = page
-      .locator('vaadin-integer-field', { hasText: 'Bracket fee per player' })
-      .locator('input[slot="input"]');
     this.maximumFullTeamsInput = page
       .locator('vaadin-integer-field', { hasText: 'Maximum Full Teams' })
       .locator('input[slot="input"]');
@@ -62,10 +44,6 @@ export class BracketEditCardPage {
       .filter({ has: page.locator('label[slot="label"]', { hasText: 'High Age' }) })
       .locator('input[slot="input"]');
 
-    this.poolNumberInput = page
-      .locator('vaadin-integer-field', { hasText: 'Pool #' })
-      .locator('input[slot="input"]');
-
     this.alternateDescriptionInput = page
       .locator('vaadin-text-field', { hasText: 'Alternate Description' })
       .locator('input[slot="input"]');
@@ -73,24 +51,16 @@ export class BracketEditCardPage {
       .locator('vaadin-text-field', { hasText: 'Comments' })
       .locator('input[slot="input"]');
 
-    this.enableRegistrationCheckbox = page.locator('vaadin-checkbox', {
-      hasText: 'Enable Registration',
-    });
-
     this.allowAnyScoreCheckbox = page.locator('vaadin-checkbox', { hasText: 'Allow Any Score' });
 
-    this.saveInfoText = page.locator('span.pd-border-card');
-    this.saveButton = page.locator('vaadin-button', { hasText: 'Save' });
-    this.createNextBracketButton = page.locator('vaadin-button', {
-      hasText: 'Create Next Bracket',
-    });
+    this.saveButton = page.getByRole('button', { name: 'Save', exact: true });
 
     this.bracketSavedNotification = page.locator(
       'vaadin-notification-card span:has-text("Bracket Saved")',
     );
   }
 
-  async creteNewBracket(tournamentStartDate, tournamentEndDate, bracketConfig, comment) {
+  async createNewBracket(tournamentStartDate, tournamentEndDate, bracketConfig, comment) {
     await this.setTeamType(bracketConfig.teamType);
     await this.setBracketFormat(bracketConfig.bracketFormat, bracketConfig.bracketFormatDetail);
     await this.setPlayOffType(bracketConfig.bracketFormat, bracketConfig.playOffType);
@@ -115,15 +85,9 @@ export class BracketEditCardPage {
     await this.backArrowButton.click();
   }
 
-  async setDate(selectLocator, optionText) {
-    await selectLocator.click();
-    await selectLocator.fill(optionText);
-    await selectLocator.press('Enter');
-  }
-
   async setRandomScheduledStartDate(tournamentStartDate, tournamentEndDate) {
     const randomDate = getRandomDateBetween(tournamentStartDate, tournamentEndDate);
-    await this.setDate(this.scheduledStartDateInput, formatDateMMDDYYYY(randomDate));
+    await setDate(this.scheduledStartDateInput, formatDateMMDDYYYY(randomDate));
   }
 
   async setRandomScheduledStartTime() {
@@ -198,7 +162,10 @@ export class BracketEditCardPage {
   }
 
   async setAllowAnyScore(allowAnyScore) {
-    if (!allowAnyScore) return;
-    await this.allowAnyScoreCheckbox.click();
+    if (allowAnyScore == null) return;
+    const isChecked = await this.allowAnyScoreCheckbox.locator('input[slot="input"]').isChecked();
+    if (isChecked !== allowAnyScore) {
+      await this.allowAnyScoreCheckbox.click();
+    }
   }
 }

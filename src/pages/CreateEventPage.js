@@ -1,7 +1,7 @@
 'use-strict';
 import { expect } from '@playwright/test';
 
-export class CreteEventPage {
+export class CreateEventPage {
   constructor(page) {
     this.page = page;
     this.createTournamentButton = page.locator('vaadin-button', {
@@ -11,7 +11,7 @@ export class CreteEventPage {
     this.yesButton = this.confirmationDialog.locator('vaadin-button', { hasText: 'Yes' });
   }
 
-  async accessToCreteTournamentScreen() {
+  async accessToCreateTournamentScreen() {
     await this.createTournamentButton.click();
     await expect(this.confirmationDialog).toBeVisible();
     await this.yesButton.click();
