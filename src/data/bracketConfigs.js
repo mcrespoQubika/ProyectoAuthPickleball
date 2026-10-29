@@ -64,13 +64,13 @@ export const BRACKET_CONFIGS = [
   },
   {
     teamType: "Men's Doubles",
-    bracketFormat: 'Double Elimination',
-    bracketFormatDetail: 'Winner of consolation bracket moves up',
+    bracketFormat: 'Single Elimination',
+    bracketFormatDetail: 'Gold/Silver medals only',
     playOffType: null,
     lowSkillLevel: null,
     highSkillLevel: null,
     lowAge: null,
     highAge: null,
-    allowAnyScore: false,
+    allowAnyScore: true,
   },
 ];

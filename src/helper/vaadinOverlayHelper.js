@@ -14,13 +14,20 @@ export async function selectExactOption(page, triggerLocator, optionsSelector, o
   await openOverlayOptions(page, triggerLocator, optionsSelector);
 
   const option = page.locator(`${optionsSelector}:text-is("${optionText}")`);
+  const matchCount = await option.count();
+  if (matchCount !== 1) {
+    throw new Error(
+      `selectExactOption: expected exactly one option with text "${optionText}", but found ${matchCount}. ` +
+        (matchCount === 0
+          ? 'This value no longer matches an option exactly as shown in the app — check if it changed.'
+          : 'Multiple options share this exact text.'),
+    );
+  }
+
   await option.waitFor({ state: 'visible' });
   await option.click();
 }
 
-// optionTextDetail narrows the match when several options share the same optionTextPrefix
-// (e.g. two options both labeled "Single Elimination" but with a different description) — pass
-// a snippet unique to the description of the one you want.
 export async function selectOptionByPrefix(
   page,
   triggerLocator,
@@ -40,8 +47,8 @@ export async function selectOptionByPrefix(
   if (matchCount !== 1) {
     const detailInfo = optionTextDetail ? ` and detail "${optionTextDetail}"` : ' (no detail set)';
     throw new Error(
-      `Bracket config error: expected exactly one "Bracket Format" option matching prefix "${optionTextPrefix}"${detailInfo}, but found ${matchCount}. ` +
-        'Multiple options share this prefix — set bracketFormatDetail in bracketConfigs.js to a unique snippet of the option description you want.',
+      `selectOptionByPrefix: expected exactly one option matching prefix "${optionTextPrefix}"${detailInfo}, but found ${matchCount}. ` +
+        'Multiple options share this prefix — pass an optionTextDetail with a unique snippet of the description of the option you want.',
     );
   }
 

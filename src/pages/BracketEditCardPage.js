@@ -111,7 +111,13 @@ export class BracketEditCardPage {
   async setPlayOffType(bracketFormat, playOffType) {
     const requiresPlayOffType =
       bracketFormat === 'Round Robin' || bracketFormat === 'Double Round Robin';
-    if (!requiresPlayOffType || playOffType == null) return;
+    if (!requiresPlayOffType) return;
+
+    if (playOffType == null) {
+      throw new Error(
+        `Bracket config error: bracketFormat "${bracketFormat}" requires a playOffType, but none was set.`,
+      );
+    }
 
     await selectOptionByPrefix(this.page, this.playOffTypeSelect, VAADIN_SELECT_OPTIONS, playOffType);
   }

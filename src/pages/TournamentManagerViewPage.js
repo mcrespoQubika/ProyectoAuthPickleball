@@ -1,5 +1,3 @@
-'use-strict';
-
 import {
   addDays,
   addMonths,
@@ -7,7 +5,11 @@ import {
   formatDateDayMonthName,
   formatDateMMDDYYYY,
 } from '../helper/dateHelper.js';
-import { VAADIN_SELECT_OPTIONS, selectExactOption, setDate } from '../helper/vaadinOverlayHelper.js';
+import {
+  VAADIN_SELECT_OPTIONS,
+  selectExactOption,
+  setDate,
+} from '../helper/vaadinOverlayHelper.js';
 import { TOURNAMENT_CONFIG } from '../data/tournamentConfig.js';
 
 export class TournamentManagerViewPage {

@@ -41,27 +41,31 @@ test('Create tournament and its brackets', async ({ page }) => {
   });
 
   for (const [index, bracketConfig] of BRACKET_CONFIGS.entries()) {
-    await test.step(
-      `Add bracket ${index + 1} (${bracketConfig.teamType} - ${bracketConfig.bracketFormat})`,
-      async () => {
-        const bracketComment = `bracket${index + 1}`;
-        const bracketCountBefore = await bracket.bracketRows.count();
+    await test.step(`Add bracket ${index + 1} (${bracketConfig.teamType} - ${bracketConfig.bracketFormat})`, async () => {
+      const bracketComment = `bracket${index + 1}`;
+      const bracketLabel = bracketConfig.alternateDescription ?? bracketConfig.teamType;
+      const bracketLabelIsExact = bracketConfig.alternateDescription != null;
+      const matchingRowsBefore = await bracket
+        .bracketRowsWithLabel(bracketLabel, { exact: bracketLabelIsExact })
+        .count();
 
-        await bracket.clickAddBracket();
-        await addBracket.createNewBracket(
-          tournamentCreation.eventStartDate,
-          tournamentCreation.eventEndDate,
-          bracketConfig,
-          bracketComment,
-        );
-        await addBracket.saveBracket();
-        await expect(addBracket.bracketSavedNotification).toBeVisible();
-        await addBracket.goBackToPoolReport();
-        await bracket.addBracketButton.waitFor({ state: 'visible' });
+      await bracket.clickAddBracket();
+      await addBracket.createNewBracket(
+        tournamentCreation.eventStartDate,
+        tournamentCreation.eventEndDate,
+        bracketConfig,
+        bracketComment,
+      );
+      await addBracket.saveBracket();
+      await expect(addBracket.bracketSavedNotification).toBeVisible();
+      await expect(addBracket.bracketSavedNotification).toBeHidden({ timeout: 10_000 });
+      await addBracket.goBackToPoolReport();
+      await bracket.addBracketButton.waitFor({ state: 'visible' });
 
-        await expect(bracket.bracketRows).toHaveCount(bracketCountBefore + 1);
-      },
-    );
+      await expect(
+        bracket.bracketRowsWithLabel(bracketLabel, { exact: bracketLabelIsExact }),
+      ).toHaveCount(matchingRowsBefore + 1);
+    });
   }
 
   await test.step('Tournament appears on the Home screen', async () => {

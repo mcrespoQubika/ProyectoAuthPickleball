@@ -22,7 +22,7 @@ export default defineConfig({
   use: {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: { mode: 'only-on-failure', fullPage: true },
     headless: !!process.env.CI,
     launchOptions: {
       slowMo: process.env.CI ? 0 : 500,
