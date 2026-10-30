@@ -1,4 +1,3 @@
-'use-strict';
 import { expect } from '@playwright/test';
 
 export class CreateEventPage {

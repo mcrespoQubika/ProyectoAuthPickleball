@@ -1,5 +1,3 @@
-'use-strict';
-
 export class TournamentPoolReportPage {
   constructor(page) {
     this.page = page;
@@ -13,7 +11,7 @@ export class TournamentPoolReportPage {
     await this.addBracketButton.click();
   }
 
-  bracketRowsWithLabel(bracketLabel, { exact }) {
+  bracketRowsWithLabel(bracketLabel, { exact = false } = {}) {
     const escapedLabel = bracketLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const pattern = exact ? `^${escapedLabel}$` : `^${escapedLabel}`;
     return this.bracketRows.filter({ hasText: new RegExp(pattern) });

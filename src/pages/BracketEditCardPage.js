@@ -1,5 +1,3 @@
-'use-strict';
-
 import { formatDateMMDDYYYY, getRandomDateBetween } from '../helper/dateHelper.js';
 import {
   VAADIN_SELECT_OPTIONS,
@@ -119,7 +117,12 @@ export class BracketEditCardPage {
       );
     }
 
-    await selectOptionByPrefix(this.page, this.playOffTypeSelect, VAADIN_SELECT_OPTIONS, playOffType);
+    await selectOptionByPrefix(
+      this.page,
+      this.playOffTypeSelect,
+      VAADIN_SELECT_OPTIONS,
+      playOffType,
+    );
   }
 
   async setLowSkillLevel(lowSkillLevel) {
