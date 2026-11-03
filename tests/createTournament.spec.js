@@ -50,12 +50,16 @@ test('Create tournament and its brackets', async ({ page }) => {
         .count();
 
       await bracket.clickAddBracket();
-      await addBracket.createNewBracket(
+      const { scheduledStartDate, scheduledStartTime } = await addBracket.createNewBracket(
         tournamentCreation.eventStartDate,
         tournamentCreation.eventEndDate,
         bracketConfig,
         bracketComment,
       );
+      test.info().annotations.push({
+        type: `Bracket ${index + 1} scheduled start`,
+        description: `${scheduledStartDate} ${scheduledStartTime}`,
+      });
       await addBracket.saveBracket();
       await expect(addBracket.bracketSavedNotification).toBeVisible();
       await expect(addBracket.bracketSavedNotification).toBeHidden({ timeout: 10_000 });

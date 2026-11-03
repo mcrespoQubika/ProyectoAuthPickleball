@@ -1,5 +1,3 @@
-'use strict';
-
 export const VAADIN_SELECT_OPTIONS = 'vaadin-select-overlay[opened] vaadin-select-item';
 export const VAADIN_TIME_PICKER_OPTIONS = 'vaadin-time-picker-overlay vaadin-time-picker-item';
 

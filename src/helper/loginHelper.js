@@ -1,5 +1,3 @@
-'use strict';
-
 import { expect } from '@playwright/test';
 import { FakeLoginPage } from '../pages/FakeLoginPage.js';
 import { LoginPage } from '../pages/LoginPage.js';

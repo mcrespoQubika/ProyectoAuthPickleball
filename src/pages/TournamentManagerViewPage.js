@@ -66,9 +66,10 @@ export class TournamentManagerViewPage {
     const uniqueSuffix = Math.floor(1000 + Math.random() * 9000);
     this.tournamentName = `${formatDateDayMonthName(new Date())} ${process.env.TOURNAMENT_NAME} ${uniqueSuffix}`;
 
-    await this.selectPlayLocation('Miami', 'Miami, Florida');
+    const { citySearchTerm, cityOptionText } = TOURNAMENT_CONFIG.playLocation;
+    await this.selectPlayLocation(citySearchTerm, cityOptionText);
     await this.tournamentNameInput.fill(this.tournamentName);
-    await this.tournamentFeeInput.fill('5');
+    await this.tournamentFeeInput.fill(String(TOURNAMENT_CONFIG.fee));
     await this.enterTournamentDateTimes();
     await this.setTournamentConfiguration();
     await this.saveButton.click();

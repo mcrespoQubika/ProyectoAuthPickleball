@@ -62,8 +62,11 @@ export class BracketEditCardPage {
     await this.setTeamType(bracketConfig.teamType);
     await this.setBracketFormat(bracketConfig.bracketFormat, bracketConfig.bracketFormatDetail);
     await this.setPlayOffType(bracketConfig.bracketFormat, bracketConfig.playOffType);
-    await this.setRandomScheduledStartDate(tournamentStartDate, tournamentEndDate);
-    await this.setRandomScheduledStartTime();
+    const scheduledStartDate = await this.setRandomScheduledStartDate(
+      tournamentStartDate,
+      tournamentEndDate,
+    );
+    const scheduledStartTime = await this.setRandomScheduledStartTime();
 
     await this.setLowSkillLevel(bracketConfig.lowSkillLevel);
     await this.setHighSkillLevel(bracketConfig.highSkillLevel);
@@ -73,6 +76,8 @@ export class BracketEditCardPage {
     await this.setComments(comment);
     await this.setMaximumFullTeams(bracketConfig.maximumFullTeams);
     await this.setAllowAnyScore(bracketConfig.allowAnyScore);
+
+    return { scheduledStartDate, scheduledStartTime };
   }
 
   async saveBracket() {
@@ -84,12 +89,15 @@ export class BracketEditCardPage {
   }
 
   async setRandomScheduledStartDate(tournamentStartDate, tournamentEndDate) {
-    const randomDate = getRandomDateBetween(tournamentStartDate, tournamentEndDate);
-    await setDate(this.scheduledStartDateInput, formatDateMMDDYYYY(randomDate));
+    const randomDate = formatDateMMDDYYYY(
+      getRandomDateBetween(tournamentStartDate, tournamentEndDate),
+    );
+    await setDate(this.scheduledStartDateInput, randomDate);
+    return randomDate;
   }
 
   async setRandomScheduledStartTime() {
-    await selectRandomOption(this.page, this.scheduledStartTimeInput, VAADIN_TIME_PICKER_OPTIONS);
+    return selectRandomOption(this.page, this.scheduledStartTimeInput, VAADIN_TIME_PICKER_OPTIONS);
   }
 
   async setTeamType(teamType) {

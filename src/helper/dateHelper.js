@@ -1,5 +1,3 @@
-'use strict';
-
 export function addDays(date, days) {
   const result = new Date(date);
   result.setDate(result.getDate() + days);
@@ -30,6 +28,7 @@ export function formatDateDayMonthName(date) {
 }
 
 export function getRandomDateBetween(startDate, endDate) {
-  const randomTime = startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime());
+  const randomTime =
+    startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime());
   return new Date(randomTime);
 }
