@@ -75,13 +75,3 @@ test.describe('Login: successful authentication', () => {
     await expect(page).toHaveTitle('Den Home');
   });
 });
-
-test.afterEach(async ({ page }, testInfo) => {
-  console.log(`Finished test ${testInfo.title} with status ${testInfo.status}`);
-  if (testInfo.status !== testInfo.expectedStatus) {
-    await page.screenshot({
-      path: testInfo.outputPath('screenshot.png'),
-      fullPage: true,
-    });
-  }
-});

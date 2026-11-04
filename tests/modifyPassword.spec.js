@@ -95,13 +95,3 @@ test.describe('Successful change password', () => {
     }
   });
 });
-
-test.afterEach(async ({ page }, testInfo) => {
-  console.log(`Finished test ${testInfo.title} with status ${testInfo.status}`);
-  if (testInfo.status !== testInfo.expectedStatus) {
-    await page.screenshot({
-      path: testInfo.outputPath('screenshot.png'),
-      fullPage: true,
-    });
-  }
-});
